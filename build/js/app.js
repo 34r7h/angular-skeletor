@@ -24,12 +24,25 @@
         {name: 'services', type:'page'},
         {name: 'service', type:'item'},
         {name: 'search', type:'query'},
-        {name: 'services', type:'admin'}
+        {name: 'services', type:'admin'},
+        {name: 'products', type:'page'},
+        {name: 'product', type:'item'}
+
       ],
       services = ['data', 'api'],
       makeController = function (name, constructor) {
         $controllerProvider.register(name, constructor);
         return (this);
+      },
+      setController = function (route) {
+        var name = route.name + 'Ctrl',
+          fun = function ($scope, Api, $state) {
+            console.log('route.type', route.type);
+            console.log('$state', $state);
+            $scope.state = $state;
+            $scope.Api = Api;
+          };
+        makeController(name, fun);
       };
     console.log(services);
 
@@ -47,18 +60,8 @@
             return '/' + route.name;
           }
         })(),
-        templateUrl = 'main/' + route.type + '.tpl.html',
-        setController = function () {
-        var name = route.name + 'Ctrl',
-        fun = function ($scope, Api, $state) {
-          console.log('route.type', route.type);
-          console.log('$state', $state);
-          $scope.state = $state;
-          $scope.Api = Api;
-        };
-        makeController(name, fun);
-      };
-      setController();
+        templateUrl = 'main/' + route.type + '.tpl.html';
+      setController(route);
 
       $stateProvider.state(stateName, {
         url: routeUrl,
